@@ -6,20 +6,21 @@ import com.banco.api.presentation.dto.cliente.ClienteResponse;
 
 public class ClienteMapper {
 
-    public static Cliente toEntity(ClienteRequest dto) {
-        return Cliente.builder()
-                .nome(dto.nome())
-                .cpf(dto.cpf())
-                .email(dto.email())
-                .build();
+    public static ClienteResponse toResponse(Cliente cliente) {
+        return new ClienteResponse(
+                cliente.getId(),
+                cliente.getNome(),
+                cliente.getCpf(),
+                cliente.getEmail(),
+                cliente.isAtivo(),
+                cliente.getDataCriacao());
     }
 
-    public static ClienteResponse toResponse(Cliente entity) {
-        return new ClienteResponse(
-                entity.getId(),
-                entity.getNome(),
-                entity.getCpf(),
-                entity.getEmail(),
-                entity.getDataCadastro());
+    public static Cliente toEntity(ClienteRequest request) {
+        return Cliente.builder()
+                .nome(request.nome())
+                .cpf(request.cpf())
+                .email(request.email())
+                .build();
     }
 }

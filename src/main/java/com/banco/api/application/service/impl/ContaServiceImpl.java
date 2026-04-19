@@ -9,6 +9,7 @@ import com.banco.api.domain.model.*;
 import com.banco.api.infrastructure.repository.ContaRepository;
 import com.banco.api.infrastructure.repository.TransacaoRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ContaServiceImpl implements ContaService {
 
     private final ContaRepository contaRepository;
@@ -27,6 +29,7 @@ public class ContaServiceImpl implements ContaService {
     @Override
     @Transactional
     public Conta abrir(Long clienteId, TipoConta tipo) {
+        log.info("Abrindo nova conta do tipo {} para o cliente ID: {}", tipo, clienteId);
         Cliente cliente = clienteService.buscarPorId(clienteId);
 
         String numeroConta = UUID.randomUUID().toString().substring(0, 8).toUpperCase();
@@ -56,6 +59,7 @@ public class ContaServiceImpl implements ContaService {
     @Override
     @Transactional
     public Conta depositar(String numeroConta, BigDecimal valor) {
+        log.info("Iniciando depósito de {} na conta {}", valor, numeroConta);
         Conta conta = buscarPorNumeroConta(numeroConta);
         validarContaAtiva(conta);
         conta.depositar(valor);
@@ -69,10 +73,12 @@ public class ContaServiceImpl implements ContaService {
     @Override
     @Transactional
     public Conta sacar(String numeroConta, BigDecimal valor) {
+        log.info("Iniciando saque de {} na conta {}", valor, numeroConta);
         Conta conta = buscarPorNumeroConta(numeroConta);
         validarContaAtiva(conta);
 
         if (conta.getSaldo().compareTo(valor) < 0) {
+            log.warn("Falha no saque: saldo insuficiente na conta {}. Saldo atual: {}", numeroConta, conta.getSaldo());
             throw new SaldoInsuficienteException("Saldo insuficiente para o saque solicitado.");
         }
 
@@ -87,6 +93,8 @@ public class ContaServiceImpl implements ContaService {
     @Override
     @Transactional
     public void transferir(String numeroContaOrigem, String numeroContaDestino, BigDecimal valor) {
+        log.info("Iniciando transferência de {} da conta {} para a conta {}", valor, numeroContaOrigem,
+                numeroContaDestino);
         Conta origem = buscarPorNumeroConta(numeroContaOrigem);
         Conta destino = buscarPorNumeroConta(numeroContaDestino);
 
@@ -94,6 +102,8 @@ public class ContaServiceImpl implements ContaService {
         validarContaAtiva(destino);
 
         if (origem.getSaldo().compareTo(valor) < 0) {
+            log.warn("Falha na transferência: saldo insuficiente na conta de origem {}. Saldo atual: {}",
+                    numeroContaOrigem, origem.getSaldo());
             throw new SaldoInsuficienteException("Saldo insuficiente na conta de origem para a transferência.");
         }
 
@@ -112,6 +122,7 @@ public class ContaServiceImpl implements ContaService {
     @Override
     @Transactional
     public void encerrar(String numeroConta) {
+        log.info("Encerrando a conta {}", numeroConta);
         Conta conta = buscarPorNumeroConta(numeroConta);
         conta.setAtiva(false);
         contaRepository.save(conta);

@@ -6,6 +6,7 @@ import com.banco.api.domain.exception.CpfJaCadastradoException;
 import com.banco.api.domain.model.Cliente;
 import com.banco.api.infrastructure.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ClienteServiceImpl implements ClienteService {
 
     private final ClienteRepository clienteRepository;

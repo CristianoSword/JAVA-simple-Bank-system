@@ -12,6 +12,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -94,14 +99,16 @@ class ClienteServiceImplTest {
     @DisplayName("(5) deveListarTodosOsClientes")
     void deveListarTodosOsClientes() {
         // given
+        Pageable pageable = PageRequest.of(0, 10);
         List<Cliente> clientes = List.of(new Cliente(), new Cliente());
-        given(clienteRepository.findAll()).willReturn(clientes);
+        Page<Cliente> page = new PageImpl<>(clientes, pageable, clientes.size());
+        given(clienteRepository.findAll(pageable)).willReturn(page);
 
         // when
-        List<Cliente> result = clienteService.listarTodos();
+        Page<Cliente> result = clienteService.listarTodos(pageable);
 
         // then
-        assertEquals(2, result.size());
-        verify(clienteRepository).findAll();
+        assertEquals(2, result.getTotalElements());
+        verify(clienteRepository).findAll(pageable);
     }
 }

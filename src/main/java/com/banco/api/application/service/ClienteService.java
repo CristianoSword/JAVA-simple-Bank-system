@@ -1,8 +1,8 @@
 package com.banco.api.application.service;
 
 import com.banco.api.domain.model.Cliente;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ClienteService {
     Cliente cadastrar(Cliente cliente);
@@ -11,7 +11,7 @@ public interface ClienteService {
 
     Cliente buscarPorCpf(String cpf);
 
-    List<Cliente> listarTodos();
+    Page<Cliente> listarTodos(Pageable pageable);
 
-    Cliente atualizar(Long id, Cliente dados);
+    Cliente atualizar(Long id, Cliente dadosAtualizados);
 }

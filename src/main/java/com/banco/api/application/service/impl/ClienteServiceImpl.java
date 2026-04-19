@@ -6,6 +6,8 @@ import com.banco.api.domain.exception.CpfJaCadastradoException;
 import com.banco.api.domain.model.Cliente;
 import com.banco.api.infrastructure.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,8 +41,8 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
-    public List<Cliente> listarTodos() {
-        return clienteRepository.findAll();
+    public Page<Cliente> listarTodos(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
     }
 
     @Override

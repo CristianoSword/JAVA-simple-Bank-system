@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface TransacaoRepository extends JpaRepository<Transacao, Long> {
     List<Transacao> findByContaIdOrderByDataHoraDesc(Long contaId);
-    // Nota: findByContaIdOrderByDataHoraDesc(Long contaId, Pageable pageable) será
-    // adicionado no COMMIT 24.
+
+    Page<Transacao> findByContaIdOrderByDataHoraDesc(Long contaId, Pageable pageable);
 }

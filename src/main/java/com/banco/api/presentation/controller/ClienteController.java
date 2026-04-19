@@ -10,7 +10,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,13 +65,15 @@ public class ClienteController {
         return ResponseEntity.ok(ClienteMapper.toResponse(cliente));
     }
 
-    @Operation(summary = "Listar todos os clientes")
-    @ApiResponse(responseCode = "200", description = "Retorna a lista de clientes")
+    @Operation(summary = "Listar todos os clientes", description = "Retorna uma lista paginada de clientes")
+    @ApiResponse(responseCode = "200", description = "Retorna a página de clientes")
     @GetMapping
-    public ResponseEntity<List<ClienteResponse>> listarTodos() {
-        List<ClienteResponse> clientes = clienteService.listarTodos().stream()
-                .map(ClienteMapper::toResponse)
-                .collect(Collectors.toList());
+    public ResponseEntity<Page<ClienteResponse>> listarTodos(
+            @ParameterObject @PageableDefault(size = 10, sort = "nome") Pageable pageable) {
+
+        Page<ClienteResponse> clientes = clienteService.listarTodos(pageable)
+                .map(ClienteMapper::toResponse);
+
         return ResponseEntity.ok(clientes);
     }
 

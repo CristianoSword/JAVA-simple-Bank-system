@@ -1,62 +1,34 @@
-# Sistema Bancário API
+# 🏦 Simple Banking API
 
-Uma API RESTful para um sistema bancário simples, construída com Spring Boot, focada em boas práticas como **Clean Architecture**, **SOLID** e **Clean Code**.
+<h4 align="center">
+    <p>
+        <a href="./README-ptbr.md">Português</a> |
+        <b>English</b>
+    </p>
+</h4>
 
-## Tecnologias e Ferramentas
+A simple and robust Banking API built with **Spring Boot 3**, **Java 17**, and **H2 Database**. It follows **Clean Code** and **SOLID** principles, offering structured endpoints for managing clients and performing banking transactions.
 
-- **Java 17**
-- **Spring Boot 3.2.5** (Web, Data JPA, Validation)
-- **H2 Database** (em memória para DEV e persistente para PROD)
-- **Springdoc OpenAPI (Swagger)** para documentação interativa
-- **Lombok** para redução de boilerplate
-- **JUnit 5 / Mockito** para testes unitários
-- **TestRestTemplate / @SpringBootTest** para testes de integração
-- **JPA Auditing** para auditoria automática de criação e modificação
+## Features
+- **Client Management:** Register, update, and search clients by CPF or ID.
+- **Account Management:** Checking and savings accounts linked to clients.
+- **Transactions:** Deposits, withdrawals, and transfers between accounts.
+- **OpenAPI / Swagger:** Fully documented RESTful endpoints and schema validations.
+- **Pagination:** Supported for efficient large data retrieval.
+- **H2 In-Memory DB:** Fast setup and development testing.
 
-## Funcionalidades e Regras de Negócio
+## How to Run
 
-- **Clientes**: Abertura associada com Conta; validação customizada de CPF; listagem paginada (`Pageable`).
-- **Contas**: Suporte a Tipos de Conta (CORRENTE/POUPANCA).
-- **Operações**: Saque, Depósito e Transferência com cálculo atomico de saldos.
-- **Transações**: Registro automático e auditável das movimentações; extrato paginado.
-- **Tratamento de Erros**: Handler global (`@ControllerAdvice`) gerenciando mensagens ricas para o cliente, validações `@Valid` de campos, etc.
-- **Logging Estruturado**: Interceptação sistêmica com SLF4J em cada passo transacional.
+**Requirements:** `Java 17` and `Maven`.
 
-## Padrões Arquiteturais e Design
-
-- **Segregação por Camadas**: Divisão em `domain`, `application`, `presentation` e `infrastructure`.
-- **"Tell, Don't Ask"**: As lógicas de negócio do domínio (ex: depósito e saque de saldo) estão englobadas de forma coesa diretamente na classe relacional `Conta`.
-- **DTOs & Record**: Proteção da camada de aplicação transacional usando contratos isolados (Request/Response) imutáveis via Records no Java.
-
-## Como Executar (Localmente - DEV)
-
-A aplicação conta com dois perfis ativos principais configurados: `dev` (padrão) e `prod`.
-
-1. Clone o repositório
-2. Execute o comando Maven na raiz:
-   ```bash
-   mvn spring-boot:run
-   ```
-3. A API estará disponível em `http://localhost:8080/api`.
-
-### Swagger UI (Apenas DEV)
-- Acesse `http://localhost:8080/docs` para inspecionar, gerar mocks e interagir com os endpoints livremente.
-
-### Console do Banco H2
-- Acesse `http://localhost:8080/h2-console`
-- Usuário: `sa`
-- Senha: *(vazio)*
-- JDBC URL: `jdbc:h2:mem:bancodb`
-
-## Como Executar os Testes
-
-Os testes desta API são compostos por:
-- **Unitários**: Testes com mocks independentes injetados do Mockito simulando os contratos das camadas `infrastructure` (repositories), assegurando as condicionais lógicas de Exceções `@Throw`.
-- **Integração**: Ambiente web randomizado que constroi o container Spring e executa os testes chamando endpoints diretamente nos Controllers usando `TestRestTemplate`, atestando a integridade das persistências e comportamentos de `HttpStatus`.
-
+1. Run the application via terminal:
 ```bash
-mvn test
+mvn spring-boot:run
 ```
 
----
-*Este projeto foi concluído como prova de conceito incremental envolvendo 30 etapas minuciosas de evolução estrutural e boas práticas corporativas de backend.*
+2. Access the API documentation (Swagger UI):
+`http://localhost:8080/swagger-ui/index.html`
+
+3. Access the database (H2 console):
+`http://localhost:8080/h2-console`
+*(JDBC URL: `jdbc:h2:mem:bancodb` | User: `sa` | Password: empty)*

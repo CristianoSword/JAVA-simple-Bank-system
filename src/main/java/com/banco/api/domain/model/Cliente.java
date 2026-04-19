@@ -6,15 +6,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Cliente {
 
     @Id
@@ -33,7 +36,14 @@ public class Cliente {
     @Column(nullable = false)
     private String email;
 
-    @CreationTimestamp
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean ativo = true;
+
+    @CreatedDate
     @Column(nullable = false, updatable = false)
-    private LocalDate dataCadastro;
+    private LocalDateTime dataCriacao;
+
+    @LastModifiedDate
+    private LocalDateTime dataAtualizacao;
 }

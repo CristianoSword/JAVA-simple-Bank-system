@@ -2,14 +2,19 @@ package com.banco.api.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Conta {
 
     @Id
@@ -36,6 +41,13 @@ public class Conta {
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime dataCriacao;
+
+    @LastModifiedDate
+    private LocalDateTime dataAtualizacao;
+
     public void depositar(BigDecimal valor) {
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor do depósito deve ser positivo.");
@@ -47,9 +59,6 @@ public class Conta {
         if (valor == null || valor.compareTo(BigDecimal.ZERO) <= 0) {
             throw new IllegalArgumentException("O valor do saque deve ser positivo.");
         }
-        // Nota: A lógica de verificar saldo insuficiente será tratada no Service
-        // conforme COMMIT 07,
-        // mas o método de domínio já realiza a operação básica.
         this.saldo = this.saldo.subtract(valor);
     }
 }

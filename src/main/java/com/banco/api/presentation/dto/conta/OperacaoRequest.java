@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 @Schema(description = "Objeto genérico para operações de saque e depósito")
 public record OperacaoRequest(
         @Schema(description = "Valor da operação", example = "150.00")
-        @NotNull @DecimalMin("0.01") BigDecimal valor
+        @NotNull(message = "{operacao.valor.obrigatorio}") @DecimalMin(value = "0.01", message = "{operacao.valor.minimo}") BigDecimal valor
 ) {
 }
